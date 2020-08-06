@@ -1,36 +1,60 @@
 import sqlite3
 
-connection = sqlite3.connect('students.db')
-# Creates a cursor
-c = connection.cursor()
+# connection = sqlite3.connect('students.db')
+# c = connection.cursor()
 
 # c.execute("""CREATE TABLE students (
 #         first_name text,
 #         last_name text,
-#         age int
-#         )""")
+#         age text
 
-
-# deleting records
-# c.execute("DELETE from students WHERE rowid = 10")
+# )""")
 # connection.commit()
+# connection.close()
 
-c.execute("SELECT rowid, * FROM students LIMIT 5")
+def show_record():
+    connection = sqlite3.connect('students.db')
 
-# c.execute("""UPDATE students SET first_name = 'fallon' WHERE rowid = 2""")
-# connection.commit()
-# c.execute("INSERT INTO students VALUES('Mary','Smith','22')")
-# c.execute("SELECT rowid, * FROM students")
-# c.execute("SELECT * FROM students WHERE last_name LIKE 'ha%'")
-items = c.fetchall()
-for item in items:
-    print(item)
+    c = connection.cursor()
 
-# for item in items:
-#     print(item[0] + " " + item[1])
-# student_list = [('jacob','hold','17'),('fallon','hased','17'),('jab','said','17')]
-print("Successful insert")
+    c.execute("SELECT rowid, * FROM students LIMIT 5")
+    records = c.fetchall()
+    for record in records:
+        print(record)
 
-# c.executemany("INSERT INTO students VALUES (?,?,?)", student_list)
-connection.commit()
-connection.close()
+    connection.commit()
+    connection.close()
+
+
+def add(first, last, age):
+    connection = sqlite3.connect('students.db')
+    c = connection.cursor()
+    c.execute("INSERT INTO students VALUES (?,?,?)", (first, last, age))
+    connection.commit()
+    connection.close()
+
+def delete(id):
+    connection = sqlite3.connect('students.db')
+    c = connection.cursor()
+    c.execute("DELETE from students WHERE rowid = (?)", id)
+    connection.commit()
+    connection.close()
+
+def name_finder(first):
+    connection = sqlite3.connect('students.db')
+    c = connection.cursor()
+    c.execute("SELECT * from students WHERE first = (?)", (first,))
+    records = c.fetchall()
+    for record in records:
+        print(record)
+
+    connection.commit()
+    connection.close()
+
+def drop():
+    connection = sqlite3.connect('students.db')
+    c = connection.cursor()
+    c.execute("DROP TABLE students")
+    print("Table dropped.")
+    connection.commit()
+    connection.close()
